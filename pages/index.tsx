@@ -4,8 +4,8 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 import { label } from '../const/label'
+import { year, yearY, region } from '../const/label'
 import { Line } from 'react-chartjs-2';
-// import { result } from '../result';
 import {
   Chart as ChartJS,
   LineElement,
@@ -37,6 +37,7 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
+import { AccordionPart } from '../components/AccordionPart'
 
 ChartJS.register(
   LineElement,
@@ -50,15 +51,20 @@ ChartJS.register(
 
 const Home: NextPage = (result: any) => {
 
-  // console.log("result: ", result.countryData)
-  const asia = result.countryData[0]
-  const africa = result.countryData[1]
+  const asia = result.countryData["asia"]
+  const [asia3, setAsia3] = useState<any>(result.countryData["asia"])
+  // console.log("asia3", asia3)
+  // console.log(result.countryData)
+  // console.log(result.countryData[0])
+  // console.log(result.countryData[0][0].country)
+  // console.log(result.countryData[0][0].region)
+  const africa = result.countryData["africa"]
+  const [africa3, setAfrica3] = useState<any>(result.countryData["africa"])
+
   const europe = result.countryData[2]
   const oceania = result.countryData[3]
   const southamerica = result.countryData[4]
   const ncac = result.countryData[5]
-  // console.log("result.result[i]: ", result.result[i])
-  // console.log(result.result[i].total["year1930"].result)
   const [data1, setData1] = useState<number[]>([])
   const [data2, setData2] = useState<number[]>([])
   const [country1, setCountry1] = useState<string>("")
@@ -66,108 +72,96 @@ const Home: NextPage = (result: any) => {
   const [finalMatch, setFinalMatch] = useState<string[]>([])
 
 
-  // const SetData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-  // const SetData = (e: any) => {
-  //   const i: number = parseInt(e.target.value) - 1;
-  //   // const i = e.target.value;
+  // const setCountry = (e:any) => {
+  //   const i: number = parseInt(e.target.value);
   //   const data: number[] = [];
-  //   // console.log("i: ", i)
-  //   setCountry1(result.countryData[i].country + " " + result.countryData[i].flag)
-  //   data.push(parseInt(result.countryData[i].total["year1930"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1934"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1938"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1950"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1954"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1958"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1962"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1966"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1970"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1974"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1978"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1982"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1986"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1990"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1994"].result))
-  //   data.push(parseInt(result.countryData[i].total["year1998"].result))
-  //   data.push(parseInt(result.countryData[i].total["year2002"].result))
-  //   data.push(parseInt(result.countryData[i].total["year2006"].result))
-  //   data.push(parseInt(result.countryData[i].total["year2010"].result))
-  //   data.push(parseInt(result.countryData[i].total["year2014"].result))
-  //   data.push(parseInt(result.countryData[i].total["year2018"].result))
-  //   setData1(data)
+  //   const region = result.countryData[0]
   // }
 
   const SetAsia = (e: any) => {
     const i: number = parseInt(e.target.value);
     const data: number[] = [];
+    const finalMatches: string[] = [];
 
     setCountry1(asia[i].country + " " + asia[i].flag)
-    data.push(parseInt(asia[i].total["year1930"].result))
-    data.push(parseInt(asia[i].total["year1934"].result))
-    data.push(parseInt(asia[i].total["year1938"].result))
-    data.push(parseInt(asia[i].total["year1950"].result))
-    data.push(parseInt(asia[i].total["year1954"].result))
-    data.push(parseInt(asia[i].total["year1958"].result))
-    data.push(parseInt(asia[i].total["year1962"].result))
-    data.push(parseInt(asia[i].total["year1966"].result))
-    data.push(parseInt(asia[i].total["year1970"].result))
-    data.push(parseInt(asia[i].total["year1974"].result))
-    data.push(parseInt(asia[i].total["year1978"].result))
-    data.push(parseInt(asia[i].total["year1982"].result))
-    data.push(parseInt(asia[i].total["year1986"].result))
-    data.push(parseInt(asia[i].total["year1990"].result))
-    data.push(parseInt(asia[i].total["year1994"].result))
-    data.push(parseInt(asia[i].total["year1998"].result))
-    data.push(parseInt(asia[i].total["year2002"].result))
-    data.push(parseInt(asia[i].total["year2006"].result))
-    data.push(parseInt(asia[i].total["year2010"].result))
-    data.push(parseInt(asia[i].total["year2014"].result))
-    data.push(parseInt(asia[i].total["year2018"].result))
+    yearY.forEach((value) => {
+      data.push(parseInt(asia[i].total[value].result))
+      const finalMatch: string = asia[i].total[value].opponent + " " + asia[i].total[value].score;
+      finalMatches.push(finalMatch);
+    })
 
-    const finalMatches: string[] = [];
-    const finalMatch1930: string = asia[i].total["year1930"].opponent + " " + asia[i].total["year1930"].score;
-    const finalMatch1934: string = asia[i].total["year1934"].opponent + " " + asia[i].total["year1934"].score;
-    const finalMatch1938: string = asia[i].total["year1938"].opponent + " " + asia[i].total["year1938"].score;
-    const finalMatch1950: string = asia[i].total["year1950"].opponent + " " + asia[i].total["year1950"].score;
-    const finalMatch1954: string = asia[i].total["year1954"].opponent + " " + asia[i].total["year1954"].score;
-    const finalMatch1958: string = asia[i].total["year1958"].opponent + " " + asia[i].total["year1958"].score;
-    const finalMatch1962: string = asia[i].total["year1962"].opponent + " " + asia[i].total["year1962"].score;
-    const finalMatch1966: string = asia[i].total["year1966"].opponent + " " + asia[i].total["year1966"].score;
-    const finalMatch1970: string = asia[i].total["year1970"].opponent + " " + asia[i].total["year1970"].score;
-    const finalMatch1974: string = asia[i].total["year1974"].opponent + " " + asia[i].total["year1974"].score;
-    const finalMatch1978: string = asia[i].total["year1978"].opponent + " " + asia[i].total["year1978"].score;
-    const finalMatch1982: string = asia[i].total["year1982"].opponent + " " + asia[i].total["year1982"].score;
-    const finalMatch1986: string = asia[i].total["year1986"].opponent + " " + asia[i].total["year1986"].score;
-    const finalMatch1990: string = asia[i].total["year1990"].opponent + " " + asia[i].total["year1990"].score;
-    const finalMatch1994: string = asia[i].total["year1994"].opponent + " " + asia[i].total["year1994"].score;
-    const finalMatch1998: string = asia[i].total["year1998"].opponent + " " + asia[i].total["year1998"].score;
-    const finalMatch2002: string = asia[i].total["year2002"].opponent + " " + asia[i].total["year2002"].score;
-    const finalMatch2006: string = asia[i].total["year2006"].opponent + " " + asia[i].total["year2006"].score;
-    const finalMatch2010: string = asia[i].total["year2010"].opponent + " " + asia[i].total["year2010"].score;
-    const finalMatch2014: string = asia[i].total["year2014"].opponent + " " + asia[i].total["year2014"].score;
-    const finalMatch2018: string = asia[i].total["year2018"].opponent + " " + asia[i].total["year2018"].score;
+    // for (var j = 0; j < year.length; j++) {
+    //   const yearY: string = "year" + year[j]
+    //   data.push(parseInt(asia[i].total[yearY].result))
+    // }
+    // data.push(parseInt(asia[i].total["year1930"].result))
+    // data.push(parseInt(asia[i].total["year1934"].result))
+    // data.push(parseInt(asia[i].total["year1938"].result))
+    // data.push(parseInt(asia[i].total["year1950"].result))
+    // data.push(parseInt(asia[i].total["year1954"].result))
+    // data.push(parseInt(asia[i].total["year1958"].result))
+    // data.push(parseInt(asia[i].total["year1962"].result))
+    // data.push(parseInt(asia[i].total["year1966"].result))
+    // data.push(parseInt(asia[i].total["year1970"].result))
+    // data.push(parseInt(asia[i].total["year1974"].result))
+    // data.push(parseInt(asia[i].total["year1978"].result))
+    // data.push(parseInt(asia[i].total["year1982"].result))
+    // data.push(parseInt(asia[i].total["year1986"].result))
+    // data.push(parseInt(asia[i].total["year1990"].result))
+    // data.push(parseInt(asia[i].total["year1994"].result))
+    // data.push(parseInt(asia[i].total["year1998"].result))
+    // data.push(parseInt(asia[i].total["year2002"].result))
+    // data.push(parseInt(asia[i].total["year2006"].result))
+    // data.push(parseInt(asia[i].total["year2010"].result))
+    // data.push(parseInt(asia[i].total["year2014"].result))
+    // data.push(parseInt(asia[i].total["year2018"].result))
 
-    finalMatches.push(finalMatch1930)
-    finalMatches.push(finalMatch1934)
-    finalMatches.push(finalMatch1938)
-    finalMatches.push(finalMatch1950)
-    finalMatches.push(finalMatch1954)
-    finalMatches.push(finalMatch1958)
-    finalMatches.push(finalMatch1962)
-    finalMatches.push(finalMatch1966)
-    finalMatches.push(finalMatch1970)
-    finalMatches.push(finalMatch1974)
-    finalMatches.push(finalMatch1978)
-    finalMatches.push(finalMatch1982)
-    finalMatches.push(finalMatch1986)
-    finalMatches.push(finalMatch1990)
-    finalMatches.push(finalMatch1994)
-    finalMatches.push(finalMatch1998)
-    finalMatches.push(finalMatch2002)
-    finalMatches.push(finalMatch2006)
-    finalMatches.push(finalMatch2010)
-    finalMatches.push(finalMatch2014)
-    finalMatches.push(finalMatch2018)
+
+
+    // const finalMatch1930: string = asia[i].total["year1930"].opponent + " " + asia[i].total["year1930"].score;
+    // const finalMatch1934: string = asia[i].total["year1934"].opponent + " " + asia[i].total["year1934"].score;
+    // const finalMatch1938: string = asia[i].total["year1938"].opponent + " " + asia[i].total["year1938"].score;
+    // const finalMatch1950: string = asia[i].total["year1950"].opponent + " " + asia[i].total["year1950"].score;
+    // const finalMatch1954: string = asia[i].total["year1954"].opponent + " " + asia[i].total["year1954"].score;
+    // const finalMatch1958: string = asia[i].total["year1958"].opponent + " " + asia[i].total["year1958"].score;
+    // const finalMatch1962: string = asia[i].total["year1962"].opponent + " " + asia[i].total["year1962"].score;
+    // const finalMatch1966: string = asia[i].total["year1966"].opponent + " " + asia[i].total["year1966"].score;
+    // const finalMatch1970: string = asia[i].total["year1970"].opponent + " " + asia[i].total["year1970"].score;
+    // const finalMatch1974: string = asia[i].total["year1974"].opponent + " " + asia[i].total["year1974"].score;
+    // const finalMatch1978: string = asia[i].total["year1978"].opponent + " " + asia[i].total["year1978"].score;
+    // const finalMatch1982: string = asia[i].total["year1982"].opponent + " " + asia[i].total["year1982"].score;
+    // const finalMatch1986: string = asia[i].total["year1986"].opponent + " " + asia[i].total["year1986"].score;
+    // const finalMatch1990: string = asia[i].total["year1990"].opponent + " " + asia[i].total["year1990"].score;
+    // const finalMatch1994: string = asia[i].total["year1994"].opponent + " " + asia[i].total["year1994"].score;
+    // const finalMatch1998: string = asia[i].total["year1998"].opponent + " " + asia[i].total["year1998"].score;
+    // const finalMatch2002: string = asia[i].total["year2002"].opponent + " " + asia[i].total["year2002"].score;
+    // const finalMatch2006: string = asia[i].total["year2006"].opponent + " " + asia[i].total["year2006"].score;
+    // const finalMatch2010: string = asia[i].total["year2010"].opponent + " " + asia[i].total["year2010"].score;
+    // const finalMatch2014: string = asia[i].total["year2014"].opponent + " " + asia[i].total["year2014"].score;
+    // const finalMatch2018: string = asia[i].total["year2018"].opponent + " " + asia[i].total["year2018"].score;
+
+
+    // finalMatches.push(finalMatch1930)
+    // finalMatches.push(finalMatch1934)
+    // finalMatches.push(finalMatch1938)
+    // finalMatches.push(finalMatch1950)
+    // finalMatches.push(finalMatch1954)
+    // finalMatches.push(finalMatch1958)
+    // finalMatches.push(finalMatch1962)
+    // finalMatches.push(finalMatch1966)
+    // finalMatches.push(finalMatch1970)
+    // finalMatches.push(finalMatch1974)
+    // finalMatches.push(finalMatch1978)
+    // finalMatches.push(finalMatch1982)
+    // finalMatches.push(finalMatch1986)
+    // finalMatches.push(finalMatch1990)
+    // finalMatches.push(finalMatch1994)
+    // finalMatches.push(finalMatch1998)
+    // finalMatches.push(finalMatch2002)
+    // finalMatches.push(finalMatch2006)
+    // finalMatches.push(finalMatch2010)
+    // finalMatches.push(finalMatch2014)
+    // finalMatches.push(finalMatch2018)
 
     setFinalMatch(finalMatches)
     setData1(data)
@@ -1108,7 +1102,7 @@ const Home: NextPage = (result: any) => {
   };
 
   return (
-    // <div className={styles.container}>
+
     <Container w={{ base: '400px', sm: '500px', md: '600px', lg: '800px' }} mx='auto' minW='400px' maxW='800px'>
       <Head>
         <title>🏆FIFA World Cup Results🏆</title>
@@ -1118,13 +1112,11 @@ const Home: NextPage = (result: any) => {
 
       <main>
         <div style={{ position: 'sticky', top: '0', zIndex: '10' }}>
-          {/* <Box w={{ base: '20%', sm: '600px', md: '600px', lg: '600px' }} h={{ base: '320px', md: '350px', lg: '400px' }} mx='auto' position='fixed' top='0' bgColor='green.200' pt='4' pb='20' zIndex='5'> */}
           <Box h={{ base: '300px', sm: '350px', md: '410px', lg: '510px' }} pt='4' bgColor='white'>
             <Text textAlign='center' fontSize={{ base: '2xl', sm: '2xl', md: '2xl', lg: '2xl' }}>🏆FIFA World Cup Results🏆</Text>
             <Center>
               <Flex>
                 <Text w='40' textAlign='center' fontSize={{ base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' }}>{country1}</Text>
-                <Text w='40' textAlign='center' fontSize={{ base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' }}>{country2}</Text>
               </Flex>
             </Center>
             <Line data={data} options={options}></Line>
@@ -1132,10 +1124,12 @@ const Home: NextPage = (result: any) => {
         </div>
 
         <Flex>
-          {/* <Accordion allowToggle mt='400px'> */}
-
           <Accordion allowToggle w='50%'>
             <Text textAlign='center' mb='5'>Country1</Text>
+
+            <AccordionPart result={asia3} SetCountry={SetAsia} />
+            <AccordionPart result={africa3} SetCountry={SetAfrica} />
+
             <AccordionItem>
               <h2>
                 <AccordionButton>
@@ -1147,9 +1141,8 @@ const Home: NextPage = (result: any) => {
               </h2>
               <AccordionPanel pb={4}>
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={1}>
-                  {asia.map((result: any, index: any) => (
+                  {result.countryData["asia"].map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={SetAsia} value={index}>
                         {result.flag}
                       </button>
@@ -1170,9 +1163,8 @@ const Home: NextPage = (result: any) => {
               </h2>
               <AccordionPanel pb={4}>
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
-                  {africa.map((result: any, index: any) => (
+                  {result.countryData["africa"].map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={SetAfrica} value={index}>
                         {result.flag}
                       </button>
@@ -1182,7 +1174,7 @@ const Home: NextPage = (result: any) => {
               </AccordionPanel>
             </AccordionItem>
 
-            <AccordionItem>
+            {/* <AccordionItem>
               <h2>
                 <AccordionButton>
                   <Box flex='1' textAlign='left'>
@@ -1195,7 +1187,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {europe.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={SetEurope} value={index}>
                         {result.flag}
                       </button>
@@ -1203,9 +1194,9 @@ const Home: NextPage = (result: any) => {
                   ))}
                 </SimpleGrid>
               </AccordionPanel>
-            </AccordionItem>
+            </AccordionItem> */}
 
-            <AccordionItem>
+            {/* <AccordionItem>
               <h2>
                 <AccordionButton>
                   <Box flex='1' textAlign='left'>
@@ -1218,7 +1209,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {oceania.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={SetOceania} value={index}>
                         {result.flag}
                       </button>
@@ -1226,9 +1216,9 @@ const Home: NextPage = (result: any) => {
                   ))}
                 </SimpleGrid>
               </AccordionPanel>
-            </AccordionItem>
+            </AccordionItem> */}
 
-            <AccordionItem>
+            {/* <AccordionItem>
               <h2>
                 <AccordionButton>
                   <Box flex='1' textAlign='left'>
@@ -1241,7 +1231,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {southamerica.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={SetSouthAmerica} value={index}>
                         {result.flag}
                       </button>
@@ -1249,9 +1238,9 @@ const Home: NextPage = (result: any) => {
                   ))}
                 </SimpleGrid>
               </AccordionPanel>
-            </AccordionItem>
+            </AccordionItem> */}
 
-            <AccordionItem>
+            {/* <AccordionItem>
               <h2>
                 <AccordionButton>
                   <Box flex='1' textAlign='left'>
@@ -1264,7 +1253,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {ncac.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={SetNcac} value={index}>
                         {result.flag}
                       </button>
@@ -1272,11 +1260,16 @@ const Home: NextPage = (result: any) => {
                   ))}
                 </SimpleGrid>
               </AccordionPanel>
-            </AccordionItem>
+            </AccordionItem> */}
+
           </Accordion>
 
-          <Accordion allowToggle w='50%'>
+
+          {/* country2 /////////////////////////////////////////////////////////////////*/}
+
+          {/* <Accordion allowToggle w='50%'>
             <Text textAlign='center' mb='5'>Country2</Text>
+            
             <AccordionItem>
               <h2>
                 <AccordionButton>
@@ -1290,7 +1283,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {asia.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={setAsia2} value={index}>
                         {result.flag}
                       </button>
@@ -1313,7 +1305,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {africa.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={setAfrica2} value={index}>
                         {result.flag}
                       </button>
@@ -1336,7 +1327,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {europe.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={setEurope2} value={index}>
                         {result.flag}
                       </button>
@@ -1359,7 +1349,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {oceania.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={setOceania2} value={index}>
                         {result.flag}
                       </button>
@@ -1382,7 +1371,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {southamerica.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={setSouthAmerica2} value={index}>
                         {result.flag}
                       </button>
@@ -1405,7 +1393,6 @@ const Home: NextPage = (result: any) => {
                 <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={2}>
                   {ncac.map((result: any, index: any) => (
                     <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-                      {/* <button key={result.id} onClick={SetAsia} value={result.id}> */}
                       <button key={result.id} onClick={setNcac2} value={index}>
                         {result.flag}
                       </button>
@@ -1414,24 +1401,9 @@ const Home: NextPage = (result: any) => {
                 </SimpleGrid>
               </AccordionPanel>
             </AccordionItem>
-          </Accordion>
+          </Accordion> */}
 
         </Flex>
-
-        {/* <SimpleGrid columns={8} spacing={3} mt={{ base: '320px', md: '340px', lg: '400px' }} backgroundColor='pink.100'>
-          {
-            result.countryData.map((result: any) => (
-              <Box key={result.id} fontSize={{ base: '50px', md: '60px', lg: '70px' }} onClick={SetData}>
-                <button key={result.id} onClick={SetData} value={result.id}>
-                  {result.flag}
-                </button>
-                <span>{result.flag}</span>
-                {result.flag}
-              </Box>
-              <Button colorScheme='teal' size='xs' key={result.id} onClick={SetData} value={result.id}>{result.country}</Button>
-            ))
-          }
-        </SimpleGrid> */}
       </main>
 
       {/* 
@@ -1475,10 +1447,12 @@ const labelFunc = (label: any) => {
 }
 
 export async function getStaticProps() {
+
+  // 国データ取得
   const url = 'http://localhost:3000/api/data';
   const res = await fetch(url)
   const result = await res.json()
-  // console.log(result[0].region)
+
   const asia: string[] = []
   const africa: string[] = []
   const europe: string[] = []
@@ -1486,6 +1460,7 @@ export async function getStaticProps() {
   const southamerica: string[] = []
   const ncac: string[] = []
 
+  // 国データを地域毎に分ける
   for (var i = 0; i < result.length - 1; i++) {
     switch (result[i].region) {
       case "Europe":
@@ -1508,11 +1483,15 @@ export async function getStaticProps() {
         break;
     }
   }
-  // console.log(ncac)
 
-  const countryData = []
-  countryData.push(asia, africa, europe, oceania, southamerica, ncac)
-  // console.log(countryData)
+  const countryData: { [key: string]: string[] } = { asia: [], africa: [], europe: [], oceania: [], southamerica: [], ncac: [] }
+  countryData["asia"] = asia;
+  countryData["africa"] = africa;
+  countryData["europe"] = europe;
+  countryData["oceania"] = oceania;
+  countryData["southamerica"] = southamerica;
+  countryData["ncac"] = ncac;
+
 
   return {
     props: {
