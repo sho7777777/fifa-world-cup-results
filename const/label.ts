@@ -6,4 +6,4 @@ export const year = ['1930', '1934', '1938', '1950', '1954', '1958', '1962', '19
 
 export const yearY = ['year1930', 'year1934', 'year1938', 'year1950', 'year1954', 'year1958', 'year1962', 'year1966', 'year1970', 'year1974', 'year1978', 'year1982', 'year1986', 'year1990', 'year1994', 'year1998', 'year2002', 'year2006', 'year2010', 'year2014', 'year2018'];
 
-export const region = ['asia', 'africa', 'europe', 'oceania', 'southamerica', 'ncac']
+export const regions = ['asia', 'africa', 'europe', 'oceania', 'southamerica', 'ncac']
