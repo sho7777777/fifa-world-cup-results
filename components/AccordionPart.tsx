@@ -6,7 +6,7 @@ import {
   Box,
   SimpleGrid,
 } from '@chakra-ui/react';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 type Props = {
   result: any;
@@ -14,7 +14,8 @@ type Props = {
 }
 
 export const AccordionPart: FC<Props> = (props) => {
-  const { result, setCountry } = props;
+
+  const { result, setCountry } = props
 
   return (
     // <div>
@@ -33,7 +34,7 @@ export const AccordionPart: FC<Props> = (props) => {
         <SimpleGrid columns={{ base: 3, sm: 3, md: 4 }} spacing={1}>
           {result.map((result: any, index: any) => (
             <Box key={result.id} fontSize={{ base: '35px', md: '60px', lg: '65px' }}>
-              <button key={result.id} onClick={setCountry} value={index}>
+              <button key={result.id} onClick={setCountry} value={String(index) + ":" + result.region}>
                 {result.flag}
               </button>
             </Box>
