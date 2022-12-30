@@ -3,7 +3,6 @@ import { Country, Region } from '../type/countryType'
 export const useCountries = () => {
 
   const setCountries = (region: string, countryData: Region) => {
-
     let cData: Country[] = [];
 
     switch (region) {
@@ -28,5 +27,6 @@ export const useCountries = () => {
     }
     return cData;
   }
+
   return setCountries
 }

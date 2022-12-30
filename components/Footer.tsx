@@ -1,19 +1,11 @@
+import { Box } from "@chakra-ui/react"
+import Link from "next/link"
 
 
 export const Footer = () => {
   return (
-    <div></div>
-    // <footer className={styles.footer}>
-    //     <a
-    //       href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Powered by{' '}
-    //       <span className={styles.logo}>
-    //         <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-    //       </span>
-    //     </a>
-    //   </footer>
+    <Box bg="green.100" textAlign="center" zIndex={5} position="fixed" bottom="0" left="0" w="100%">
+      <Link href={"#"}>Created by Sho</Link>
+    </Box>
   )
 }

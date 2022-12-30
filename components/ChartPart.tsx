@@ -1,25 +1,40 @@
 import { Country, Region } from '../type/countryType'
-import { label, countryLabels, appTitle } from '../const/label'
+import { appTitle, countryLabels, yearLabel } from '../const/label'
+
+// Components
+import { AccordionGroup } from './AccordionGroup';
+import { ButtonPart } from './ButtonPart';
+import { Footer } from './Footer';
+import { Header } from './Header';
+
+// hooks
+import { useContext, useState } from 'react'
+import { useCountries } from '../hooks/useCountries';
+import { useFinalResults } from '../hooks/useFinalResults';
+
+import { CountryData } from '../pages'
+
 import { Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Title,
-  Tooltip, Legend, ChartData, ChartOptions,
+  CategoryScale,
+  Chart as ChartJS,
+  ChartData,
+  ChartOptions,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
 } from 'chart.js';
-import { useState, useContext, FC } from 'react'
-import { CountryData } from '../pages'
-import { useCountries } from '../hooks/useCountries';
 
 import {
   Box,
-  Button,
-  Center,
   Container,
   Flex,
   Grid,
   Text,
 } from '@chakra-ui/react';
-import { AccordionPart } from '../components/AccordionPart'
-import { useFinalResults } from '../hooks/useFinalResults';
 
 ChartJS.register(
   LineElement,
@@ -31,30 +46,23 @@ ChartJS.register(
   Legend
 )
 
-import { AccordionGroup } from './AccordionGroup';
-import { Header } from './Header';
-import { ButtonPart } from './ButtonPart';
-import { Footer } from './Footer';
-
 export const ChartPart = () => {
 
-  const [data1, setData1] = useState<number[]>([])
-  const [data2, setData2] = useState<number[]>([])
-  const [data3, setData3] = useState<number[]>([])
-  const [data4, setData4] = useState<number[]>([])
-  const [country1, setCountry1] = useState<string>("")
-  const [country2, setCountry2] = useState<string>("")
-  const [country3, setCountry3] = useState<string>("")
-  const [country4, setCountry4] = useState<string>("")
-  const [finalMatch, setFinalMatch] = useState<string[]>([])
+  // 選択された国データ
+  type SelectedCountry = {
+    name: string,
+    results: number[],
+  }
+  const [country1, setCountry1] = useState<SelectedCountry>({ name: "", results: [] })
+  const [country2, setCountry2] = useState<SelectedCountry>({ name: "", results: [] })
+  const [country3, setCountry3] = useState<SelectedCountry>({ name: "", results: [] })
+  const [country4, setCountry4] = useState<SelectedCountry>({ name: "", results: [] })
+
+  const [finalMatchResults, setFinalMatchResults] = useState<string[]>([])
 
   const countryData: Region = useContext(CountryData)
 
-  // const [showCountry1Accordion, setShowCountry1Accordion] = useState<boolean>(true)
-  // const [showCountry2Accordion, setShowCountry2Accordion] = useState<boolean>(false)
-  // const [showCountry3Accordion, setShowCountry3Accordion] = useState<boolean>(false)
-  // const [showCountry4Accordion, setShowCountry4Accordion] = useState<boolean>(false)
-
+  // アコーディオン表示用フラグ
   type CountryAccordion = {
     country1: boolean,
     country2: boolean,
@@ -69,10 +77,6 @@ export const ChartPart = () => {
   })
 
   const showCountry1: () => void = () => {
-    // setShowCountry1Accordion(true)
-    // setShowCountry2Accordion(false)
-    // setShowCountry3Accordion(false)
-    // setShowCountry4Accordion(false)
     setShowCountryAccordion(prevState => ({
       ...prevState,
       country1: true,
@@ -83,10 +87,6 @@ export const ChartPart = () => {
   }
 
   const showCountry2: () => void = () => {
-    // setShowCountry1Accordion(false)
-    // setShowCountry2Accordion(true)
-    // setShowCountry3Accordion(false)
-    // setShowCountry4Accordion(false)
     setShowCountryAccordion(prevState => ({
       ...prevState,
       country1: false,
@@ -97,10 +97,6 @@ export const ChartPart = () => {
   }
 
   const showCountry3: () => void = () => {
-    // setShowCountry1Accordion(false)
-    // setShowCountry2Accordion(false)
-    // setShowCountry3Accordion(true)
-    // setShowCountry4Accordion(false)
     setShowCountryAccordion(prevState => ({
       ...prevState,
       country1: false,
@@ -111,10 +107,6 @@ export const ChartPart = () => {
   }
 
   const showCountry4: () => void = () => {
-    // setShowCountry1Accordion(false)
-    // setShowCountry2Accordion(false)
-    // setShowCountry3Accordion(false)
-    // setShowCountry4Accordion(true)
     setShowCountryAccordion(prevState => ({
       ...prevState,
       country1: false,
@@ -130,55 +122,51 @@ export const ChartPart = () => {
   const setCountry = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 
     // index情報とregion情報を取り出す。
-    const indexRegion: string = (e.target as HTMLButtonElement).value;
-    const text: string[] = indexRegion.split(":")
+    const indexAndRegion: string = (e.target as HTMLButtonElement).value;
+    const text: string[] = indexAndRegion.split(":")
     const i: number = parseInt(text[0]);
     const region: string = text[1];
 
     const cData: Country[] = setCountries(region, countryData);
-    const { dataArr, finalMatches, countryName } = createResultArray(i, cData)
-    setFinalMatch(finalMatches)
+    const { resultsArr, finalMatchresults, countryName } = createResultArray(i, cData)
+    setFinalMatchResults(finalMatchresults)
 
     if (showCountryAccordion.country1) {
-      setCountry1(countryName)
-      setData1(dataArr)
+      setCountry1(prevState => ({ ...prevState, name: countryName, results: resultsArr }))
     } else if (showCountryAccordion.country2) {
-      setCountry2(countryName)
-      setData2(dataArr)
+      setCountry2(prevState => ({ ...prevState, name: countryName, results: resultsArr }))
     } else if (showCountryAccordion.country3) {
-      setCountry3(countryName)
-      setData3(dataArr)
+      setCountry3(prevState => ({ ...prevState, name: countryName, results: resultsArr }))
     } else if (showCountryAccordion.country4) {
-      setCountry4(countryName)
-      setData4(dataArr)
+      setCountry4(prevState => ({ ...prevState, name: countryName, results: resultsArr }))
     }
   }
 
-  const labels: string[] = label;
+  const labels: string[] = yearLabel;
   const data: ChartData<'line'> = {
     labels: labels,
     datasets: [
       {
-        data: data1,
-        label: country1,
+        data: country1.results,
+        label: country1.name,
         backgroundColor: '#ffffff',
         borderColor: '#da70d6',
       },
       {
-        data: data2,
-        label: country2,
+        data: country2.results,
+        label: country2.name,
         backgroundColor: '#ffffff',
         borderColor: '#7fffd4'
       },
       {
-        data: data3,
-        label: country3,
+        data: country3.results,
+        label: country3.name,
         backgroundColor: '#ffffff',
         borderColor: '#ff7f50'
       },
       {
-        data: data4,
-        label: country4,
+        data: country4.results,
+        label: country4.name,
         backgroundColor: '#ffffff',
         borderColor: '#a9a9a9'
       },
@@ -190,7 +178,6 @@ export const ChartPart = () => {
       legend: {
         position: 'top',
         display: true,
-
         // title: {
         //   display: true,
         //   text: country
@@ -226,7 +213,7 @@ export const ChartPart = () => {
           footer: function (tooltipItems) {
             let finalMatchResult;
             tooltipItems.forEach(function (tooltipItem) {
-              finalMatchResult = finalMatch[tooltipItem.dataIndex]
+              finalMatchResult = finalMatchResults[tooltipItem.dataIndex]
             })
             return finalMatchResult
           }
@@ -262,38 +249,37 @@ export const ChartPart = () => {
   };
 
   return (
-    <Container w={{ base: '400px', sm: '500px', md: '600px', lg: '800px' }} mx='auto' minW='400px' maxW='800px'>
-      <Header />
-      <main>
-        <div style={{ position: 'sticky', top: '0', zIndex: '10' }}>
-          <Box h={{ base: '310px', sm: '310px', md: '350px', lg: '450px' }} pt='4' bgColor='white'>
-            <Text textAlign='center' fontSize={{ base: '2xl', sm: '2xl', md: '2xl', lg: '2xl' }}>{appTitle}</Text>
-            {/* <Center>
-              <Flex>
-                <Text w='40' textAlign='center' fontSize={{ base: 'xl', sm: 'xl', md: '2xl', lg: 'xl' }}>{country1}{country2}{country3}{country4}</Text>
-              </Flex>
-            </Center> */}
-            <Line data={data} options={options}></Line>
+    <>
+      <Container w={{ base: '400px', sm: '500px', md: '600px', lg: '800px' }} mx='auto' minW='400px' maxW='800px'>
+        <Header />
+
+        <main>
+          <Box position="sticky" top="0" zIndex="5">
+            <Box h={{ base: '310px', sm: '310px', md: '350px', lg: '450px' }} pt='4' bgColor='white'>
+              <Text textAlign='center' fontSize={{ base: '2xl', sm: '2xl', md: '2xl', lg: '2xl' }}>{appTitle}</Text>
+              <Line data={data} options={options}></Line>
+            </Box>
+
+            <Grid templateColumns='repeat(4, 1fr)' gap={5} w={96} bg='white' mx='auto' mb={3}>
+              <ButtonPart groupName={countryLabels.Country1} showCountryFunc={showCountry1} />
+              <ButtonPart groupName={countryLabels.Country2} showCountryFunc={showCountry2} />
+              <ButtonPart groupName={countryLabels.Country3} showCountryFunc={showCountry3} />
+              <ButtonPart groupName={countryLabels.Country4} showCountryFunc={showCountry4} />
+            </Grid>
           </Box>
 
-          <Grid templateColumns='repeat(4, 1fr)' gap={5} w={96} bg='white' mx='auto' mb={3}>
-            <ButtonPart groupName={countryLabels.Country1} showCountryFunc={showCountry1} />
-            <ButtonPart groupName={countryLabels.Country2} showCountryFunc={showCountry2} />
-            <ButtonPart groupName={countryLabels.Country3} showCountryFunc={showCountry3} />
-            <ButtonPart groupName={countryLabels.Country4} showCountryFunc={showCountry4} />
-          </Grid>
-        </div>
+          <Flex>
+            {showCountryAccordion.country1 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country1} />}
+            {showCountryAccordion.country2 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country2} />}
+            {showCountryAccordion.country3 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country3} />}
+            {showCountryAccordion.country4 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country4} />}
+          </Flex>
+        </main>
 
-        <Flex>
-          {showCountryAccordion.country1 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country1} />}
-          {/* {showCountry1Accordion && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country1} />} */}
-          {showCountryAccordion.country2 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country2} />}
-          {showCountryAccordion.country3 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country3} />}
-          {showCountryAccordion.country4 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country4} />}
-        </Flex>
-      </main>
+      </Container >
+
       <Footer />
-    </Container >
+    </>
   )
 }
 
