@@ -17,3 +17,6 @@ export const countryLabels = {
 
 export const appTitle: string = "🏆FIFA World Cup Results🏆";
 export const svg: string = "/ball.png";
+
+// 国データ取得用URL
+export const url = 'http://localhost:3000/api/data';

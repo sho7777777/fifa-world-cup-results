@@ -2,17 +2,25 @@ import type { NextPage } from 'next'
 import { ChartPart } from '../components/ChartPart'
 import { loadCountries } from '../lib/load-country'
 import { createContext } from 'react'
-import { Region, Country } from '../type/countryType'
+import { Region } from '../type/countryType'
 
+type Props = {
+  countryList: Region
+}
 
-// export const CountryData = createContext({})
-export const CountryData = createContext<Region>({ asia: [], africa: [], europe: [], oceania: [], southamerica: [], ncac: [] })
-const Home: NextPage = (props: any) => {
+export const CountryData = createContext<Region>({
+  asia: [],
+  africa: [],
+  europe: [],
+  oceania: [],
+  southamerica: [],
+  ncac: []
+})
 
-  const countyData: Region = props.countryData
+const Home: NextPage<Props> = ({ countryList }) => {
 
   return (
-    <CountryData.Provider value={countyData}>
+    <CountryData.Provider value={countryList}>
       <ChartPart />
     </CountryData.Provider>
   )
@@ -21,11 +29,11 @@ const Home: NextPage = (props: any) => {
 export default Home
 
 export async function getStaticProps() {
-  const countryData: object = await loadCountries()
+  const countryList: Region = await loadCountries()
 
   return {
     props: {
-      countryData,
+      countryList,
     },
   }
 }

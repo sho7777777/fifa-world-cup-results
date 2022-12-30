@@ -10,19 +10,12 @@ import { CountryData } from '../pages'
 import { useCountries } from '../hooks/useCountries';
 
 import {
-  // Accordion,
-  // AccordionButton,
-  // AccordionItem,
-  // AccordionIcon,
-  // AccordionPanel,
   Box,
   Button,
   Center,
   Container,
   Flex,
   Grid,
-  // GridItem,
-  // SimpleGrid,
   Text,
 } from '@chakra-ui/react';
 import { AccordionPart } from '../components/AccordionPart'
@@ -55,48 +48,80 @@ export const ChartPart = () => {
   const [country4, setCountry4] = useState<string>("")
   const [finalMatch, setFinalMatch] = useState<string[]>([])
 
-  // const countryData: any = useContext(CountryData)
   const countryData: Region = useContext(CountryData)
-  console.log(countryData)
 
-  // const [asia, setAsiaData] = useState<any>(countryData.asia)
-  // const [africa, setAfricaData] = useState<any>(countryData.africa)
-  // const [europe, setEuropeData] = useState<any>(countryData.europe)
-  // const [oceania, setOceaniaData] = useState<any>(countryData.oceania)
-  // const [southamerica, setSouthAmericaData] = useState<any>(countryData.southamerica)
-  // const [ncac, setNcacData] = useState<any>(countryData.ncac)
+  // const [showCountry1Accordion, setShowCountry1Accordion] = useState<boolean>(true)
+  // const [showCountry2Accordion, setShowCountry2Accordion] = useState<boolean>(false)
+  // const [showCountry3Accordion, setShowCountry3Accordion] = useState<boolean>(false)
+  // const [showCountry4Accordion, setShowCountry4Accordion] = useState<boolean>(false)
 
-  const [showCountry1Accordion, setShowCountry1Accordion] = useState<boolean>(true)
-  const [showCountry2Accordion, setShowCountry2Accordion] = useState<boolean>(false)
-  const [showCountry3Accordion, setShowCountry3Accordion] = useState<boolean>(false)
-  const [showCountry4Accordion, setShowCountry4Accordion] = useState<boolean>(false)
+  type CountryAccordion = {
+    country1: boolean,
+    country2: boolean,
+    country3: boolean,
+    country4: boolean,
+  }
+  const [showCountryAccordion, setShowCountryAccordion] = useState<CountryAccordion>({
+    country1: true,
+    country2: false,
+    country3: false,
+    country4: false,
+  })
 
   const showCountry1: () => void = () => {
-    setShowCountry1Accordion(true)
-    setShowCountry2Accordion(false)
-    setShowCountry3Accordion(false)
-    setShowCountry4Accordion(false)
+    // setShowCountry1Accordion(true)
+    // setShowCountry2Accordion(false)
+    // setShowCountry3Accordion(false)
+    // setShowCountry4Accordion(false)
+    setShowCountryAccordion(prevState => ({
+      ...prevState,
+      country1: true,
+      country2: false,
+      country3: false,
+      country4: false
+    }))
   }
 
   const showCountry2: () => void = () => {
-    setShowCountry1Accordion(false)
-    setShowCountry2Accordion(true)
-    setShowCountry3Accordion(false)
-    setShowCountry4Accordion(false)
+    // setShowCountry1Accordion(false)
+    // setShowCountry2Accordion(true)
+    // setShowCountry3Accordion(false)
+    // setShowCountry4Accordion(false)
+    setShowCountryAccordion(prevState => ({
+      ...prevState,
+      country1: false,
+      country2: true,
+      country3: false,
+      country4: false
+    }))
   }
 
   const showCountry3: () => void = () => {
-    setShowCountry1Accordion(false)
-    setShowCountry2Accordion(false)
-    setShowCountry3Accordion(true)
-    setShowCountry4Accordion(false)
+    // setShowCountry1Accordion(false)
+    // setShowCountry2Accordion(false)
+    // setShowCountry3Accordion(true)
+    // setShowCountry4Accordion(false)
+    setShowCountryAccordion(prevState => ({
+      ...prevState,
+      country1: false,
+      country2: false,
+      country3: true,
+      country4: false
+    }))
   }
 
   const showCountry4: () => void = () => {
-    setShowCountry1Accordion(false)
-    setShowCountry2Accordion(false)
-    setShowCountry3Accordion(false)
-    setShowCountry4Accordion(true)
+    // setShowCountry1Accordion(false)
+    // setShowCountry2Accordion(false)
+    // setShowCountry3Accordion(false)
+    // setShowCountry4Accordion(true)
+    setShowCountryAccordion(prevState => ({
+      ...prevState,
+      country1: false,
+      country2: false,
+      country3: false,
+      country4: true
+    }))
   }
 
   const createResultArray = useFinalResults();
@@ -114,16 +139,16 @@ export const ChartPart = () => {
     const { dataArr, finalMatches, countryName } = createResultArray(i, cData)
     setFinalMatch(finalMatches)
 
-    if (showCountry1Accordion) {
+    if (showCountryAccordion.country1) {
       setCountry1(countryName)
       setData1(dataArr)
-    } else if (showCountry2Accordion) {
+    } else if (showCountryAccordion.country2) {
       setCountry2(countryName)
       setData2(dataArr)
-    } else if (showCountry3Accordion) {
+    } else if (showCountryAccordion.country3) {
       setCountry3(countryName)
       setData3(dataArr)
-    } else if (showCountry4Accordion) {
+    } else if (showCountryAccordion.country4) {
       setCountry4(countryName)
       setData4(dataArr)
     }
@@ -260,10 +285,11 @@ export const ChartPart = () => {
         </div>
 
         <Flex>
-          {showCountry1Accordion && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country1} />}
-          {showCountry2Accordion && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country2} />}
-          {showCountry3Accordion && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country3} />}
-          {showCountry4Accordion && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country4} />}
+          {showCountryAccordion.country1 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country1} />}
+          {/* {showCountry1Accordion && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country1} />} */}
+          {showCountryAccordion.country2 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country2} />}
+          {showCountryAccordion.country3 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country3} />}
+          {showCountryAccordion.country4 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country4} />}
         </Flex>
       </main>
       <Footer />

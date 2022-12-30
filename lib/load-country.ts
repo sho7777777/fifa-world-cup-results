@@ -1,49 +1,42 @@
+import { url } from "../const/label";
+import { Region } from "../type/countryType";
+
 export async function loadCountries() {
-
   // 国データ取得
-  const url = 'http://localhost:3000/api/data';
-  const res = await fetch(url)
-  const result = await res.json()
+  const cData = await (await fetch(url)).json();
+  const cLength: number = cData.length - 1
 
-  const asia: string[] = []
-  const africa: string[] = []
-  const europe: string[] = []
-  const oceania: string[] = []
-  const southamerica: string[] = []
-  const ncac: string[] = []
+  const countryList: Region = {
+    asia: [],
+    africa: [],
+    europe: [],
+    oceania: [],
+    southamerica: [],
+    ncac: [],
+  };
 
   // 国データを地域毎に分ける
-  for (var i = 0; i < result.length - 1; i++) {
-    switch (result[i].region) {
-      case "Europe":
-        europe.push(result[i])
-        break;
-      case "South America":
-        southamerica.push(result[i])
-        break;
+  for (var i = 0; i < cLength; i++) {
+    switch (cData[i].region) {
       case "Asia":
-        asia.push(result[i])
+        countryList["asia"].push(cData[i]);
         break;
       case "Africa":
-        africa.push(result[i])
+        countryList["africa"].push(cData[i]);
+        break;
+      case "Europe":
+        countryList["europe"].push(cData[i]);
+        break;
+      case "South America":
+        countryList["southamerica"].push(cData[i]);
         break;
       case "North, Central America and Caribbean":
-        ncac.push(result[i])
+        countryList["ncac"].push(cData[i]);
         break;
       case "Oceania":
-        oceania.push(result[i])
+        countryList["oceania"].push(cData[i]);
         break;
     }
   }
-
-  const countryData: { [key: string]: string[] } = { asia: [], africa: [], europe: [], oceania: [], southamerica: [], ncac: [] }
-  countryData["asia"] = asia;
-  countryData["africa"] = africa;
-  countryData["europe"] = europe;
-  countryData["oceania"] = oceania;
-  countryData["southamerica"] = southamerica;
-  countryData["ncac"] = ncac;
-
-  return countryData
-
+  return countryList;
 }
