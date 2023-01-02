@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import { appTitle, svg } from '../const/label'
+import Head from "next/head";
+import { appTitle, svg } from "../const/label";
 
 export const Header = () => {
   return (
@@ -8,5 +8,5 @@ export const Header = () => {
       <meta name="description" content="FIFA World Cup Results" />
       <link rel="icon" href={svg} />
     </Head>
-  )
-}
+  );
+};
