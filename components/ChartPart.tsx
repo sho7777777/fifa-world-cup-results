@@ -268,7 +268,7 @@ export const ChartPart = () => {
             </Grid>
           </Box>
 
-          <Flex>
+          <Flex mb={20}>
             {showCountryAccordion.country1 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country1} />}
             {showCountryAccordion.country2 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country2} />}
             {showCountryAccordion.country3 && <AccordionGroup setCountry={setCountry} groupName={countryLabels.Country3} />}
