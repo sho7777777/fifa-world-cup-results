@@ -1,34 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## アプリ概要
+- 第1回目(1930年)から第21回(2018年)までのサッカーW杯の各国の最終成績をグラフ形式にしています。
+- 最大で4カ国まで同時に表示可能です。
 
-## Getting Started
+## URL
+- https://fifa-world-cup-9bf30.web.app/
+※ macOS, Safariのみ対応
 
-First, run the development server:
+## 作成理由
+- 2022年11月に開催されたカタールW杯グループリーグで、日本がドイツとスペインに勝利しました。  
+2カ国の強さは元々把握していたものの、より客観的かつわかりやすく強さを把握したいと考えました。  
+そこで、過去の各国のW杯成績の推移をグラフ形式で表示し、それらを重ね合わせることで、各国の力の差を視覚的に表示し把握しやすくできると考え作成に至りました。
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## 使用技術
+- Next.js(TypeScript)
+- Firebase（ホスティングのみ）
+- react-chartjs-2
+- Chakra UI
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+データはNext.jsのAPI機能を利用して自作のjsonデータを取得しています。
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 作成時間
+①2カ国のみ対応
+- データ作成：10h
+- 実装：15h
+- スタイリング：5.5h
+- デプロイ：2h
+計：32.5
+②4カ国対応
+- 実装＋リファクタリング：26h
+計 58.5h
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- 日本vsスペイン戦(12/2)直後に作成を開始し、日本vsクロアチア戦(12/5)開始までに2カ国同士の比較を行える状態で一旦リリースしました。  
+その後、4カ国対応し、またコードがひどい状態であったため、リファクタリングを行いました。  
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 改善点
+- 機種依存文字を使用しており、Windowsで表示した際に国旗が表示されないため、画像に差し替え予定。
+- ツールチップ内に最後の試合のスコアを表示しておりますが、最後にクリックした国の結果が表示されてしまうため、chartjsの仕様確認。
+- スマホでページを表示した際にグラフのy軸が少なく表示されてしまう。
